@@ -227,7 +227,9 @@ def create_app():
 
 
 # WSGI entry point for gunicorn
-application = create_app()
+# WSGI entry points for gunicorn (both work)
+app = create_app()
+application = app
 
 
 if __name__ == '__main__':
