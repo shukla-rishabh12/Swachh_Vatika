@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Complaints — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}All Complaints{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+
+  <div class="filters-bar">
+    <select id="filter-status">
+      <option value="">All statuses</option>
+      <option value="SUBMITTED">Submitted</option>
+      <option value="UNDER_REVIEW">Under Review</option>
+      <option value="VERIFIED">Verified</option>
+      <option value="ASSIGNED">Assigned</option>
+      <option value="IN_PROGRESS">In Progress</option>
+      <option value="WORKER_COMPLETED">Worker Completed</option>
+      <option value="ADMIN_VERIFIED">Admin Verified</option>
+      <option value="CLOSED">Closed</option>
+      <option value="REJECTED">Rejected</option>
+    </select>
+    <select id="filter-category">
+      <option value="">All categories</option>
+      <option value="GARBAGE_DUMP">Garbage Dump</option>
+      <option value="OVERFLOWING_BIN">Overflowing Bin</option>
+      <option value="PLASTIC_WASTE">Plastic Waste</option>
+      <option value="CONSTRUCTION_WASTE">Construction Waste</option>
+      <option value="DRAIN_WASTE">Drain Waste</option>
+      <option value="OPEN_DUMPING">Open Dumping</option>
+      <option value="DEAD_ANIMAL">Dead Animal</option>
+      <option value="OTHER">Other</option>
+    </select>
+    <select id="filter-priority">
+      <option value="">All priorities</option>
+      <option value="LOW">Low</option>
+      <option value="MEDIUM">Medium</option>
+      <option value="HIGH">High</option>
+      <option value="CRITICAL">Critical</option>
+    </select>
+  </div>
+
+  <div id="complaints-list" class="list-container">
+    <div class="loading">Loading...</div>
+  </div>
+
+  <div id="pagination" class="pagination"></div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/complaints.js"></script>
+{% endblock %}

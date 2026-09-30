@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Report Waste — Swachh-Seva{% endblock %}
+{% block body_role %}CITIZEN{% endblock %}
+{% block page_title %}Report Waste{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <form id="report-form" class="card form-card" enctype="multipart/form-data" novalidate>
+
+    <h2>📸 Report a Waste Issue</h2>
+    <p class="muted" style="margin-bottom:20px;">Help us keep the city clean. Fill in the details below.</p>
+
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select id="category" name="category" required>
+        <option value="">-- Select category --</option>
+        <option value="GARBAGE_DUMP">🗑️ Garbage Dump</option>
+        <option value="OVERFLOWING_BIN">🗑️ Overflowing Bin</option>
+        <option value="PLASTIC_WASTE">♻️ Plastic Waste</option>
+        <option value="CONSTRUCTION_WASTE">🏗️ Construction Waste</option>
+        <option value="DRAIN_WASTE">🚰 Drain Waste</option>
+        <option value="OPEN_DUMPING">⚠️ Open Dumping</option>
+        <option value="DEAD_ANIMAL">🐾 Dead Animal</option>
+        <option value="OTHER">📦 Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description *</label>
+      <textarea id="description" name="description" rows="4" required
+                placeholder="Describe the waste problem..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Location</label>
+      <div class="location-row">
+        <input id="latitude"  name="latitude"  type="number" step="any" placeholder="Latitude"  readonly />
+        <input id="longitude" name="longitude" type="number" step="any" placeholder="Longitude" readonly />
+        <button type="button" id="use-location-btn" class="btn-secondary">📍 Use My Location</button>
+      </div>
+      <small id="location-status" class="help-text"></small>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address (optional)</label>
+      <input id="address" name="address" type="text" placeholder="Near landmark / area name" />
+    </div>
+
+    <div class="form-group">
+      <label for="image">Photo *</label>
+      <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" />
+      <small class="help-text">JPG, PNG, WEBP · max 5 MB</small>
+      <div id="image-preview" class="image-preview"></div>
+    </div>
+
+    <div id="form-error" class="form-error" style="display:none;"></div>
+
+    <div class="form-actions">
+      <button type="submit" id="submit-btn" class="btn-primary">Submit Complaint</button>
+      <a href="/citizen/dashboard.html" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/citizen/report_waste.js"></script>
+{% endblock %}

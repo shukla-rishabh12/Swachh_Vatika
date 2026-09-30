@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}My Pickups — Swachh-Seva{% endblock %}
+{% block body_role %}CITIZEN{% endblock %}
+{% block page_title %}My Pickups{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+
+  <div class="filters-bar">
+    <a href="/citizen/pickup_request.html" class="btn-primary">+ New Pickup</a>
+    <button id="reload-btn" class="btn-secondary">⟳ Reload</button>
+  </div>
+
+  <div id="pickups-list" class="list-container">
+    <div class="loading">Loading pickups...</div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  console.log('[pickup page] script loaded');
+
+  function esc(s) {
+    if (window.utils && window.utils.escapeHtml) return window.utils.escapeHtml(s);
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function statusLabel(s) { return String(s || '').replace(/_/g, ' '); }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try { return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); }
+    catch (e) { return iso; }
+  }
+  function timeAgo(iso) {
+    if (!iso) return '';
+    try {
+      var sec = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+      if (sec < 60) return 'just now';
+      if (sec < 3600) return Math.floor(sec/60) + 'm ago';
+      if (sec < 86400) return Math.floor(sec/3600) + 'h ago';
+      return Math.floor(sec/86400) + 'd ago';
+    } catch (e) { return ''; }
+  }
+
+  async function load() {
+    var c = document.getElementById('pickups-list');
+    if (!c) return;
+    c.innerHTML = '<div class="loading">Loading pickups...</div>';
+
+    try {
+      var res = await window.api.get('/pickups/my?page=1&page_size=50');
+      console.log('[pickup page] response:', res);
+
+      var items = (res && res.data && res.data.items) || [];
+      if (items.length === 0) {
+        c.innerHTML =
+          '<div class="empty-state">' +
+            '<p>No pickup requests yet.</p>' +
+            '<a href="/citizen/pickup_request.html" class="btn-primary">Request a Pickup</a>' +
+          '</div>';
+        return;
+      }
+
+      c.innerHTML = items.map(function(p) {
+        return '<div class="card pickup-item" style="margin-bottom:14px;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
+            '<strong>Pickup #' + esc(p.id) + ' — ' + esc(p.waste_type) + '</strong>' +
+            '<span class="badge-status status-' + esc(p.status) + '">' + esc(statusLabel(p.status)) + '</span>' +
+          '</div>' +
+          (p.description ? '<p style="margin:6px 0 10px;">' + esc(p.description) + '</p>' : '') +
+          '<div style="display:flex;gap:16px;flex-wrap:wrap;color:#5c7365;font-size:13px;">' +
+            (p.address ? '<span>📍 ' + esc(p.address) + '</span>' : '') +
+            (p.preferred_date ? '<span>📅 Preferred: ' + esc(fmtDate(p.preferred_date)) + '</span>' : '') +
+            '<span>🕐 Requested: ' + esc(timeAgo(p.created_at)) + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } catch (err) {
+      console.error('[pickup page] load FAILED:', err);
+      var msg = (err && err.message) || 'Failed to load pickups.';
+      c.innerHTML =
+        '<div class="error-state">' +
+          '<p><strong>Error:</strong> ' + esc(msg) + '</p>' +
+          '<button class="btn-secondary" onclick="location.reload()">Retry</button>' +
+        '</div>';
+    }
+  }
+
+  function init() {
+    if (!window.api || !window.auth) {
+      console.error('[pickup page] core JS missing');
+      return;
+    }
+    window.auth.load().then(function(user) {
+      if (!user) { window.location.href = '/auth/login.html'; return; }
+      if (user.role !== 'CITIZEN') { window.location.href = '/403.html'; return; }
+      try { window.navigation.build('CITIZEN'); } catch (e) {}
+      try { window.notif.updateBadge(); } catch (e) {}
+      var em = document.getElementById('user-email');
+      if (em) em.textContent = user.email || '';
+      var reload = document.getElementById('reload-btn');
+      if (reload) reload.addEventListener('click', load);
+      load();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Notifications — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="filters-bar">
+    <button id="mark-all-btn" class="btn-secondary">✓ Mark all as read</button>
+    <button id="reload-btn" class="btn-secondary">⟳ Reload</button>
+  </div>
+  <div id="notif-list" class="list-container">
+    <div class="loading">Loading...</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  console.log('[admin/notifications] loaded');
+
+  function esc(s) {
+    if (window.utils && window.utils.escapeHtml) return window.utils.escapeHtml(s);
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function timeAgo(iso) {
+    if (!iso) return '';
+    try {
+      var s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+      if (s < 60) return 'just now';
+      if (s < 3600) return Math.floor(s/60) + 'm ago';
+      if (s < 86400) return Math.floor(s/3600) + 'h ago';
+      return Math.floor(s/86400) + 'd ago';
+    } catch (e) { return ''; }
+  }
+
+  async function load() {
+    var c = document.getElementById('notif-list');
+    if (!c) return;
+    c.innerHTML = '<div class="loading">Loading notifications...</div>';
+
+    try {
+      var res = await window.api.get('/notifications?page=1&page_size=50');
+      var items = (res && res.data && res.data.items) || [];
+
+      if (items.length === 0) {
+        c.innerHTML =
+          '<div class="empty-state">' +
+            '<p>📭 No notifications yet.</p>' +
+            '<p class="muted">Alerts about complaints and tasks will appear here.</p>' +
+          '</div>';
+        return;
+      }
+
+      c.innerHTML = items.map(function(n) {
+        return '<div class="card notification-item ' + (n.is_read ? 'read' : 'unread') + '" ' +
+               'data-id="' + n.id + '" ' +
+               'data-rel-type="' + esc(n.related_entity_type || '') + '" ' +
+               'data-rel-id="' + (n.related_entity_id || '') + '">' +
+          '<div class="notif-top">' +
+            '<strong>' + esc(n.title) + '</strong>' +
+            '<span class="muted">' + timeAgo(n.created_at) + '</span>' +
+          '</div>' +
+          '<div class="notif-body">' + esc(n.message) + '</div>' +
+        '</div>';
+      }).join('');
+
+      c.querySelectorAll('.notification-item').forEach(function(el) {
+        el.addEventListener('click', async function() {
+          var id = el.getAttribute('data-id');
+          var rType = el.getAttribute('data-rel-type');
+          var rId = el.getAttribute('data-rel-id');
+
+          if (el.classList.contains('unread')) {
+            try {
+              await window.api.post('/notifications/' + id + '/read', {});
+              el.classList.remove('unread');
+              el.classList.add('read');
+              if (window.notif) window.notif.updateBadge();
+            } catch (e) {}
+          }
+
+          if (rType === 'COMPLAINT' && rId) {
+            window.location.href = '/admin/complaint_detail.html?id=' + rId;
+          } else if (rType === 'TASK' && rId) {
+            window.location.href = '/admin/verification.html?task=' + rId;
+          }
+        });
+      });
+    } catch (err) {
+      console.error('[admin/notifications] load error:', err);
+      var msg = (err && err.message) || 'Failed to load notifications.';
+      c.innerHTML =
+        '<div class="error-state">' +
+          '<p><strong>Could not load notifications</strong></p>' +
+          '<p>' + esc(msg) + '</p>' +
+          '<button class="btn-secondary" onclick="location.reload()">Retry</button>' +
+        '</div>';
+    }
+  }
+
+  function init() {
+    if (!window.api || !window.auth) return;
+    window.auth.load().then(function(user) {
+      if (!user) { window.location.href = '/auth/login.html'; return; }
+      if (user.role !== 'ADMIN') { window.location.href = '/403.html'; return; }
+      try { window.navigation.build('ADMIN'); } catch (e) {}
+      try { window.notif.updateBadge(); } catch (e) {}
+      var em = document.getElementById('user-email');
+      if (em) em.textContent = user.email || '';
+
+      var markAll = document.getElementById('mark-all-btn');
+      if (markAll) markAll.addEventListener('click', async function() {
+        try {
+          await window.api.post('/notifications/read-all', {});
+          if (window.utils) window.utils.toast('All marked as read.', 'success');
+          load();
+          if (window.notif) window.notif.updateBadge();
+        } catch (e) {}
+      });
+
+      var reload = document.getElementById('reload-btn');
+      if (reload) reload.addEventListener('click', load);
+
+      load();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+})();
+</script>
+{% endblock %}

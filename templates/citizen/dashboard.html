@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Citizen Dashboard — Swachh-Seva{% endblock %}
+{% block body_role %}CITIZEN{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+
+  <section class="card welcome-card">
+    <h2>Welcome back, <span id="user-name">Citizen</span>! 🌿</h2>
+    <p>Here's your civic activity at a glance.</p>
+  </section>
+
+  <section class="card">
+    <h3>📋 Complaint Summary</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Total</span><span class="stat-value" id="stat-total-complaints">0</span></div>
+      <div class="stat"><span class="stat-label">Open</span><span class="stat-value" id="stat-open-complaints">0</span></div>
+      <div class="stat"><span class="stat-label">Resolved</span><span class="stat-value" id="stat-resolved-complaints">0</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>💰 SwachhTokens</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Balance</span><span class="stat-value" id="stat-wallet-balance">0</span></div>
+      <div class="stat"><span class="stat-label">Earned</span><span class="stat-value" id="stat-wallet-earned">0</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>⚡ Quick Actions</h3>
+    <div class="action-buttons">
+      <a href="/citizen/report_waste.html" class="btn-primary">📸 Report Waste</a>
+      <a href="/citizen/pickup_request.html" class="btn-secondary">🚛 Request Pickup</a>
+      <a href="/citizen/chat.html" class="btn-secondary">🤖 Ask AI</a>
+      <a href="/citizen/complaints.html" class="btn-secondary">📋 My Complaints</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🕐 Recent Complaints</h3>
+    <ul id="recent-complaints" class="list-empty">
+      <li class="empty">Loading...</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h3>🔔 Recent Notifications</h3>
+    <ul id="recent-notifications" class="list-empty">
+      <li class="empty">Loading...</li>
+    </ul>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/citizen/dashboard.js"></script>
+{% endblock %}

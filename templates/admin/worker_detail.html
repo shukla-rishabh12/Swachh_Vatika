@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Worker Detail — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}Worker Detail{% endblock %}
+
+{% block content %}
+<div class="page-wrapper" id="worker-wrapper">
+  <div class="loading">Loading worker...</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/worker_detail.js"></script>
+{% endblock %}

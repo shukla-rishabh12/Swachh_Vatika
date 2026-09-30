@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Worker Dashboard — Swachh-Seva{% endblock %}
+{% block body_role %}WORKER{% endblock %}
+{% block page_title %}Worker Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+
+  <section class="card welcome-card">
+    <h2>Welcome, <span id="worker-name">Worker</span>! 🔧</h2>
+    <p>Your assigned tasks at a glance.</p>
+  </section>
+
+  <section class="card">
+    <h3>📋 Task Summary</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Total</span><span class="stat-value" id="stat-total">0</span></div>
+      <div class="stat"><span class="stat-label">Assigned</span><span class="stat-value" id="stat-assigned">0</span></div>
+      <div class="stat"><span class="stat-label">In Progress</span><span class="stat-value" id="stat-inprogress">0</span></div>
+      <div class="stat"><span class="stat-label">Completed</span><span class="stat-value" id="stat-completed">0</span></div>
+      <div class="stat"><span class="stat-label">Verified</span><span class="stat-value" id="stat-verified">0</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>⚡ Quick Actions</h3>
+    <div class="action-buttons">
+      <a href="/worker/tasks.html" class="btn-primary">📋 View My Tasks</a>
+      <a href="/worker/task_history.html" class="btn-secondary">📜 Task History</a>
+      <a href="/worker/profile.html" class="btn-secondary">👤 Profile</a>
+    </div>
+  </section>
+
+  <section class="card" style="grid-column: 1 / -1;">
+    <h3>🕐 Recent Tasks</h3>
+    <ul id="recent-tasks" class="list-empty">
+      <li class="empty">Loading...</li>
+    </ul>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/worker/dashboard.js"></script>
+{% endblock %}

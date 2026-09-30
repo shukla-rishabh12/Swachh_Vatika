@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — Swachh-Seva{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+
+  <section class="card welcome-card">
+    <h2>Admin Control Center 🛡️</h2>
+    <p>Platform activity at a glance.</p>
+  </section>
+
+  <section class="card">
+    <h3>📋 Complaints</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Total</span><span class="stat-value" id="kpi-total-complaints">0</span></div>
+      <div class="stat"><span class="stat-label">Pending</span><span class="stat-value" id="kpi-pending-review">0</span></div>
+      <div class="stat"><span class="stat-label">Verified</span><span class="stat-value" id="kpi-verified">0</span></div>
+      <div class="stat"><span class="stat-label">Awaiting Proof</span><span class="stat-value" id="kpi-pending-proof">0</span></div>
+      <div class="stat"><span class="stat-label">Resolved</span><span class="stat-value" id="kpi-resolved">0</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🔧 Tasks & Workers</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Active Tasks</span><span class="stat-value" id="kpi-active-tasks">0</span></div>
+      <div class="stat"><span class="stat-label">Total Workers</span><span class="stat-value" id="kpi-workers">0</span></div>
+      <div class="stat"><span class="stat-label">Active Workers</span><span class="stat-value" id="kpi-active-workers">0</span></div>
+      <div class="stat"><span class="stat-label">Citizens</span><span class="stat-value" id="kpi-citizens">0</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🚛 Pickups & Tokens</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Total Pickups</span><span class="stat-value" id="kpi-pickups">0</span></div>
+      <div class="stat"><span class="stat-label">Pending</span><span class="stat-value" id="kpi-pending-pickups">0</span></div>
+      <div class="stat"><span class="stat-label">Tokens Issued</span><span class="stat-value" id="kpi-tokens">0</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>⚡ Quick Actions</h3>
+    <div class="action-buttons">
+      <a href="/admin/complaints.html" class="btn-primary">📋 Review Complaints</a>
+      <a href="/admin/tasks.html" class="btn-secondary">🔧 Tasks</a>
+      <a href="/admin/workers.html" class="btn-secondary">👷 Workers</a>
+      <a href="/admin/analytics.html" class="btn-secondary">📊 Analytics</a>
+      <a href="/admin/hotspots.html" class="btn-secondary">🗺️ Hotspots</a>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/dashboard.js"></script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Audit Logs — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}Audit Logs{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="filters-bar">
+    <select id="filter-entity">
+      <option value="">All entities</option>
+      <option value="COMPLAINT">Complaints</option>
+      <option value="TASK">Tasks</option>
+      <option value="USER">Users</option>
+    </select>
+  </div>
+
+  <div id="logs-list" class="list-container">
+    <div class="loading">Loading...</div>
+  </div>
+
+  <div id="pagination" class="pagination"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/audit_logs.js"></script>
+{% endblock %}

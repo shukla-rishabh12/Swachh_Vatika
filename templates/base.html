@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Swachh-Vatika{% endblock %}</title>
+
+  <!-- Shared app styles (new green theme) -->
+  <link rel="stylesheet" href="/static/css/app.css" />
+  {% block extra_css %}{% endblock %}
+</head>
+<body data-role="{% block body_role %}{% endblock %}">
+
+  {% block layout %}
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <span class="topbar-title">{% block page_title %}{% endblock %}</span>
+        </div>
+        <div class="topbar-right">
+          <a href="/citizen/notifications.html" id="notif-link" class="topbar-link">
+            🔔 Notifications
+            <span id="notif-badge" class="badge" style="display:none;">0</span>
+          </a>
+          <span id="user-email" class="user-email"></span>
+        </div>
+      </header>
+      <section id="app-content" class="page-content">
+        {% block content %}{% endblock %}
+      </section>
+    </main>
+  </div>
+  {% endblock %}
+
+  <!-- Core JS -->
+  <script src="/static/js/core/api.js"></script>
+  <script src="/static/js/core/utils.js"></script>
+  <script src="/static/js/core/auth.js"></script>
+  <script src="/static/js/core/navigation.js"></script>
+  <script src="/static/js/core/notifications.js"></script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

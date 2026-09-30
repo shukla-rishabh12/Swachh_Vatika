@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}My Wallet — Swachh-Seva{% endblock %}
+{% block body_role %}CITIZEN{% endblock %}
+{% block page_title %}SwachhToken Wallet{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+
+  <div class="wallet-summary">
+    <div class="stat-card">
+      <span class="stat-label">Current Balance</span>
+      <span class="stat-value big" id="wallet-balance">—</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Lifetime Earned</span>
+      <span class="stat-value" id="wallet-earned">—</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Lifetime Spent</span>
+      <span class="stat-value" id="wallet-spent">—</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>💸 Transaction History</h3>
+    <div id="tx-list" class="tx-list">
+      <div class="loading">Loading...</div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/citizen/wallet.js"></script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Task History — Swachh-Seva{% endblock %}
+{% block body_role %}WORKER{% endblock %}
+{% block page_title %}Task History{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="filters-bar">
+    <button id="reload-btn" class="btn-secondary">⟳ Reload</button>
+  </div>
+  <div id="history-list" class="list-container">
+    <div class="loading">Loading...</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  console.log('[worker/task_history] loaded');
+
+  function esc(s) {
+    if (window.utils && window.utils.escapeHtml) return window.utils.escapeHtml(s);
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function catLabel(c) {
+    if (window.utils && window.utils.categoryLabel) return window.utils.categoryLabel(c);
+    return String(c || '—').replace(/_/g, ' ');
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try { return new Date(iso).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); }
+    catch (e) { return iso; }
+  }
+
+  async function load() {
+    var c = document.getElementById('history-list');
+    if (!c) return;
+    c.innerHTML = '<div class="loading">Loading history...</div>';
+
+    try {
+      var res = await window.api.get('/tasks/my?status=VERIFIED&page=1&page_size=50');
+      var items = (res && res.data && res.data.items) || [];
+
+      if (items.length === 0) {
+        c.innerHTML =
+          '<div class="empty-state">' +
+            '<p>📋 No verified tasks yet.</p>' +
+            '<p class="muted">Completed and verified tasks will appear here.</p>' +
+            '<a href="/worker/tasks.html" class="btn-primary">View My Tasks</a>' +
+          '</div>';
+        return;
+      }
+
+      c.innerHTML = items.map(function(t) {
+        return '<div class="card task-item" style="margin-bottom:14px;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;">' +
+            '<strong>Task #' + t.id + '</strong>' +
+            '<span class="badge-status status-VERIFIED">Verified</span>' +
+          '</div>' +
+          '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:#5c7365;">' +
+            '<span>📂 ' + esc(catLabel(t.complaint_category)) + '</span>' +
+            (t.complaint_address ? '<span>📍 ' + esc(t.complaint_address) + '</span>' : '') +
+            '<span>✓ ' + esc(fmtDate(t.verified_at || t.completed_at || t.created_at)) + '</span>' +
+          '</div>' +
+          '<div style="margin-top:12px;">' +
+            '<a href="/worker/task_detail.html?id=' + t.id + '" class="btn-secondary btn-sm">View Details</a>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } catch (err) {
+      console.error('[worker/task_history] load error:', err);
+      var msg = (err && err.message) || 'Failed to load history.';
+      c.innerHTML =
+        '<div class="error-state">' +
+          '<p><strong>Could not load history</strong></p>' +
+          '<p>' + esc(msg) + '</p>' +
+          '<button class="btn-secondary" onclick="location.reload()">Retry</button>' +
+        '</div>';
+    }
+  }
+
+  function init() {
+    if (!window.api || !window.auth) return;
+    window.auth.load().then(function(user) {
+      if (!user) { window.location.href = '/auth/login.html'; return; }
+      if (user.role !== 'WORKER') { window.location.href = '/403.html'; return; }
+      try { window.navigation.build('WORKER'); } catch (e) {}
+      try { window.notif.updateBadge(); } catch (e) {}
+      var em = document.getElementById('user-email');
+      if (em) em.textContent = user.email || '';
+
+      var reload = document.getElementById('reload-btn');
+      if (reload) reload.addEventListener('click', load);
+
+      load();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+})();
+</script>
+{% endblock %}

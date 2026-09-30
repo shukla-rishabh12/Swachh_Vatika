@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Hotspots — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}Waste Hotspots{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <section class="card">
+    <h3>🗺️ Ward-wise Complaint Density</h3>
+    <div id="ward-hotspots">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🔥 Top Hotspot Clusters</h3>
+    <div id="grid-hotspots">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/hotspots.js"></script>
+{% endblock %}

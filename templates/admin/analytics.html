@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Analytics — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}Analytics{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+
+  <section class="card">
+    <h3>📊 Complaints by Status</h3>
+    <div id="by-status" class="breakdown-list">Loading...</div>
+  </section>
+
+  <section class="card">
+    <h3>🏷️ Complaints by Category</h3>
+    <div id="by-category" class="breakdown-list">Loading...</div>
+  </section>
+
+  <section class="card">
+    <h3>🎯 Complaints by Priority</h3>
+    <div id="by-priority" class="breakdown-list">Loading...</div>
+  </section>
+
+  <section class="card">
+    <h3>🗺️ Complaints by Ward</h3>
+    <div id="by-ward" class="breakdown-list">Loading...</div>
+  </section>
+
+  <section class="card">
+    <h3>⏱️ Resolution Metrics</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Total Closed</span><span class="stat-value" id="res-total">0</span></div>
+      <div class="stat"><span class="stat-label">Avg Days</span><span class="stat-value" id="res-avg">0</span></div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/analytics.js"></script>
+{% endblock %}

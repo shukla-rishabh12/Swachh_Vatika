@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Request Pickup — Swachh-Seva{% endblock %}
+{% block body_role %}CITIZEN{% endblock %}
+{% block page_title %}Request Pickup{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <form id="pickup-form" class="card form-card" novalidate>
+
+    <h2>🚛 Request a Waste Pickup</h2>
+    <p class="muted" style="margin-bottom:20px;">Schedule a pickup at your location.</p>
+
+    <div class="form-group">
+      <label for="waste_type">Waste Type *</label>
+      <select id="waste_type" name="waste_type" required>
+        <option value="">-- Select type --</option>
+        <option value="HOUSEHOLD_WASTE">🏠 Household Waste</option>
+        <option value="BULKY_WASTE">📦 Bulky Waste</option>
+        <option value="E_WASTE">🔌 E-Waste</option>
+        <option value="GARDEN_WASTE">🌿 Garden Waste</option>
+        <option value="CONSTRUCTION_DEBRIS">🏗️ Construction Debris</option>
+        <option value="OTHER">📦 Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description (optional)</label>
+      <textarea id="description" name="description" rows="3" placeholder="Any specific details..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Location</label>
+      <div class="location-row">
+        <input id="latitude"  type="number" step="any" placeholder="Latitude"  readonly />
+        <input id="longitude" type="number" step="any" placeholder="Longitude" readonly />
+        <button type="button" id="use-location-btn" class="btn-secondary">📍 Use My Location</button>
+      </div>
+      <small id="location-status" class="help-text"></small>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address (optional)</label>
+      <input id="address" type="text" placeholder="Area / landmark" />
+    </div>
+
+    <div class="form-group">
+      <label for="preferred_date">Preferred Date (optional)</label>
+      <input id="preferred_date" type="date" />
+    </div>
+
+    <div id="form-error" class="form-error" style="display:none;"></div>
+    <div id="form-success" class="form-success" style="display:none;"></div>
+
+    <div class="form-actions">
+      <button type="submit" id="submit-btn" class="btn-primary">Request Pickup</button>
+      <a href="/citizen/dashboard.html" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  console.log('[pickup_request] inline script loaded');
+
+  function init() {
+    console.log('[pickup_request] init start');
+
+    if (!window.api)  { console.error('api.js missing');  return; }
+    if (!window.auth) { console.error('auth.js missing'); return; }
+
+    // Auth check
+    window.auth.load().then(function(user) {
+      if (!user) { window.location.href = '/auth/login.html'; return; }
+      if (user.role !== 'CITIZEN') { window.location.href = '/403.html'; return; }
+
+      try { window.navigation.build('CITIZEN'); } catch (e) { console.warn(e); }
+      try { window.notif.updateBadge(); } catch (e) { console.warn(e); }
+
+      var em = document.getElementById('user-email');
+      if (em) em.textContent = user.email || '';
+
+      // Location button
+      var locBtn = document.getElementById('use-location-btn');
+      if (locBtn) {
+        locBtn.addEventListener('click', function() {
+          var status = document.getElementById('location-status');
+          if (!navigator.geolocation) { status.textContent = 'Geolocation not supported.'; return; }
+          status.textContent = 'Fetching...';
+          navigator.geolocation.getCurrentPosition(
+            function(pos) {
+              document.getElementById('latitude').value  = pos.coords.latitude.toFixed(6);
+              document.getElementById('longitude').value = pos.coords.longitude.toFixed(6);
+              status.textContent = '✅ Location captured.';
+            },
+            function() { status.textContent = '⚠️ Permission denied. Enter address manually.'; }
+          );
+        });
+      }
+
+      // Form submit
+      var form = document.getElementById('pickup-form');
+      var btn = document.getElementById('submit-btn');
+      var errEl = document.getElementById('form-error');
+      var okEl = document.getElementById('form-success');
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        errEl.style.display = 'none';
+        okEl.style.display = 'none';
+
+        var waste_type = document.getElementById('waste_type').value;
+        if (!waste_type) {
+          errEl.textContent = 'Please select a waste type.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        var latVal = document.getElementById('latitude').value;
+        var lngVal = document.getElementById('longitude').value;
+
+        var payload = {
+          waste_type: waste_type,
+          description: document.getElementById('description').value.trim() || null,
+          latitude: latVal ? parseFloat(latVal) : null,
+          longitude: lngVal ? parseFloat(lngVal) : null,
+          address: document.getElementById('address').value.trim() || null,
+          preferred_date: document.getElementById('preferred_date').value || null
+        };
+
+        console.log('[pickup_request] payload:', payload);
+
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+
+        try {
+          var res = await window.api.post('/pickups', payload);
+          console.log('[pickup_request] response:', res);
+
+          okEl.textContent = '✅ Pickup request submitted! ID: ' + (res.data.pickup_id || '');
+          okEl.style.display = 'block';
+
+          if (window.utils && window.utils.toast) {
+            window.utils.toast('Pickup request submitted!', 'success');
+          }
+
+          setTimeout(function() {
+            window.location.href = '/citizen/pickup.html';
+          }, 1200);
+        } catch (err) {
+          console.error('[pickup_request] error:', err);
+          var msg = (err && err.message) || (err && err.error && err.error.code) || 'Failed';
+          errEl.textContent = '❌ ' + msg;
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Request Pickup';
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+{% endblock %}

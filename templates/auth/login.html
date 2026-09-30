@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Swachh-Vatika</title>
+  <link rel="stylesheet" href="/static/css/app.css" />
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    <div class="auth-brand">Swachh-Vatika</div>
+    <h1>Welcome back</h1>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••" />
+      </div>
+
+      <div id="login-error" class="form-error" style="display:none;"></div>
+
+      <button type="submit" id="login-btn" class="btn-primary btn-block">Login</button>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account? <a href="/auth/register.html">Register</a>
+    </p>
+  </div>
+
+  <script src="/static/js/core/api.js"></script>
+  <script src="/static/js/core/utils.js"></script>
+  <script src="/static/js/core/auth.js"></script>
+
+  <script>
+    (function () {
+      const form  = document.getElementById('login-form');
+      const btn   = document.getElementById('login-btn');
+      const errEl = document.getElementById('login-error');
+
+      (async () => {
+        const u = await window.auth.load();
+        if (u) window.auth.redirectAfterLogin(u.role);
+      })();
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Logging in...';
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!email || !password) {
+          errEl.textContent = 'Email and password are required.';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Login';
+          return;
+        }
+
+        try {
+          const user = await window.auth.login(email, password);
+          window.utils.toast('Login successful!', 'success', 1500);
+          setTimeout(() => window.auth.redirectAfterLogin(user.role), 400);
+        } catch (err) {
+          errEl.textContent = (err && err.message) || 'Login failed.';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Login';
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

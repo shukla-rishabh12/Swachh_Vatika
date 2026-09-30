@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}AI Assistant — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}AI Assistant{% endblock %}
+
+{% block content %}
+<div class="page-wrapper chat-wrapper">
+  <div class="card chat-card">
+    <div class="chat-header">
+      <strong>🤖 Swachh-Vatika AI Assistant</strong>
+      <button id="new-chat-btn" class="btn-secondary btn-sm">+ New Chat</button>
+    </div>
+    <div id="chat-messages" class="chat-messages">
+      <div class="chat-placeholder">Ask me anything about platform analytics, complaints, workers, or tasks.</div>
+    </div>
+    <form id="chat-form" class="chat-input-row">
+      <input id="chat-input" type="text" placeholder="Type your message..." autocomplete="off" />
+      <button type="submit" id="send-btn" class="btn-primary">Send</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/chat.js"></script>
+{% endblock %}

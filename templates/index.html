@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swachh-Vatika — Civic Waste Management</title>
+
+  <!-- Design tokens & shared styles -->
+  <link rel="stylesheet" href="/static/css/variables.css" />
+  <link rel="stylesheet" href="/static/css/base.css" />
+  <link rel="stylesheet" href="/static/css/responsive.css" />
+  <!-- Landing-specific styles -->
+  <link rel="stylesheet" href="/static/css/landing.css" />
+</head>
+<body class="landing-page">
+
+  <!-- Floating leaves background -->
+  <div class="fx" aria-hidden="true">
+    <i class="bl" style="left:-8%; top:8%"></i>
+    <i class="bl b2"></i>
+    <i class="lf" style="--x: 6%;  --s: 26px; --o: .5;  --d: 26s; --dl: -3s;"></i>
+    <i class="lf" style="--x: 16%; --s: 18px; --o: .35; --d: 32s; --dl: -12s;"></i>
+    <i class="lf" style="--x: 28%; --s: 34px; --o: .45; --d: 28s; --dl: -20s;"></i>
+    <i class="lf" style="--x: 41%; --s: 20px; --o: .3;  --d: 36s; --dl: -8s;"></i>
+    <i class="lf" style="--x: 55%; --s: 28px; --o: .5;  --d: 30s; --dl: -16s;"></i>
+    <i class="lf" style="--x: 68%; --s: 16px; --o: .35; --d: 34s; --dl: -24s;"></i>
+    <i class="lf" style="--x: 80%; --s: 32px; --o: .45; --d: 27s; --dl: -5s;"></i>
+    <i class="lf" style="--x: 92%; --s: 22px; --o: .3;  --d: 38s; --dl: -14s;"></i>
+  </div>
+
+  <!-- NAV -->
+  <header class="landing-nav">
+    <div class="brand">Swachh<span>-Vatika</span></div>
+    <nav class="landing-links">
+      <a href="/auth/login.html">Login</a>
+      <a href="/auth/register.html" class="btn-primary">Register</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <h1>Report Waste. Track Progress. <em>Earn SwachhTokens.</em></h1>
+      <p>
+        Swachh-Vatika helps citizens report waste problems, request pickups, and track
+        resolution — while admins and workers coordinate to keep our city clean.
+      </p>
+      <div class="hero-cta">
+        <a href="/auth/register.html" class="btn-primary">Get Started</a>
+        <a href="/auth/login.html" class="btn-secondary">I already have an account</a>
+      </div>
+    </div>
+
+    <!-- Decorative orb visual -->
+    <div class="orb" aria-hidden="true">
+      <i class="ring"></i>
+      <i class="ring r2"></i>
+      <div class="core">♻️</div>
+      <span class="chip c1">🌱 Report</span>
+      <span class="chip c2">🚛 Pickup</span>
+      <span class="chip c3">✅ Verified</span>
+      <span class="chip c4">🏆 +5 Tokens</span>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>1</strong> <span>Report a waste problem with a photo and location.</span></li>
+      <li><strong>2</strong> <span>Admin reviews and assigns a worker.</span></li>
+      <li><strong>3</strong> <span>Worker completes the task and uploads proof.</span></li>
+      <li><strong>4</strong> <span>You earn SwachhTokens once resolved.</span></li>
+    </ol>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <h2>Features</h2>
+    <ul>
+      <li>📍 Location-based waste reporting</li>
+      <li>📸 Image upload for proof</li>
+      <li>🔔 Real-time notifications</li>
+      <li>🏆 SwachhTokens reward system</li>
+      <li>🤖 AI civic assistant</li>
+      <li>📊 Admin analytics & hotspots</li>
+    </ul>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <p>&copy; 2026 Swachh-Vatika · Civic Waste Management Platform</p>
+  </footer>
+
+</body>
+</html>

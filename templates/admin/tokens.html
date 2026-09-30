@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Token Management — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}Token Management{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+
+  <section class="card">
+    <h3>💰 Token Statistics</h3>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-label">Total Issued</span><span class="stat-value" id="tk-earned">0</span></div>
+      <div class="stat"><span class="stat-label">Total Spent</span><span class="stat-value" id="tk-spent">0</span></div>
+      <div class="stat"><span class="stat-label">Adjusted</span><span class="stat-value" id="tk-adjusted">0</span></div>
+      <div class="stat"><span class="stat-label">In Wallets</span><span class="stat-value" id="tk-balance">0</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>⚙️ Manual Adjustment</h3>
+    <p class="muted" style="margin-bottom:14px;">Adjust a user's balance manually. Amount can be positive or negative.</p>
+    <form id="adjust-form" class="form-inline">
+      <input id="adj-user-id" type="number" placeholder="User ID" required />
+      <input id="adj-amount" type="number" placeholder="Amount (e.g. 10 or -5)" required />
+      <input id="adj-reason" type="text" placeholder="Reason" />
+      <button type="submit" class="btn-primary">Adjust</button>
+    </form>
+    <div id="adj-status" class="help-text"></div>
+  </section>
+
+  <section class="card">
+    <h3>👛 All Wallets</h3>
+    <div id="wallets-list">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/tokens.js"></script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Users — Admin{% endblock %}
+{% block body_role %}ADMIN{% endblock %}
+{% block page_title %}All Users{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="filters-bar">
+    <select id="filter-role">
+      <option value="">All roles</option>
+      <option value="CITIZEN">Citizens</option>
+      <option value="WORKER">Workers</option>
+      <option value="ADMIN">Admins</option>
+    </select>
+    <input id="filter-search" type="text" placeholder="🔍 Search name or email..." />
+  </div>
+
+  <div id="users-list" class="list-container">
+    <div class="loading">Loading...</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin/users.js"></script>
+{% endblock %}
