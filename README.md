@@ -1,7 +1,13 @@
 # Swachh-Seva
 
 Citizen-centric municipal waste reporting, pickup management, worker coordination, verification, incentive and analytics platform.
-
+accounts for test::
+username for citizen: citizen@example.com
+password: citizen123
+username for admin: admin@example.com
+password: admin123
+username for worker: worker@example.com
+password: worker123
 ## Tech Stack
 
 - **Frontend:** HTML5 + CSS3 + Vanilla JavaScript
